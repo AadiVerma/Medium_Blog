@@ -27,7 +27,8 @@ useRouter.post("signup", async(c) => {
           const user = await prisma.user.create({
               data: {
                   email: body.email,
-                  password: body.password
+                  password: body.password,
+                  name:body.name
               }
           });
       const jwt = await sign({ id: user.id }, c.env.JWT_SECRET);
@@ -58,8 +59,9 @@ useRouter.post("signup", async(c) => {
         c.status(403);
         return c.json({ error: "user not found" });
       }
+      const name=user.name || "";
       const jwt = await sign({ id: user.id }, c.env.JWT_SECRET);
-          return c.json({ jwt });
+          return c.json({ jwt,name});
     } catch (error) {
       c.status(403);
           return c.json({ error: "error while signing In" });
